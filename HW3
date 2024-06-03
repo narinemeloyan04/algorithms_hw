@@ -1,0 +1,76 @@
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+
+using namespace std;
+
+vector<int> shortestPath(vector<vector<int>>& graph, int start, int end) {
+    int n = graph.size();
+    vector<int> distance(n, -1);  
+    vector<int> parent(n, -1);    
+    queue<int> q;
+
+    q.push(start);
+    distance[start] = 0;
+
+    while (!q.empty()) {
+        int node = q.front();
+        q.pop();
+
+        for (int next : graph[node]) {
+            if (distance[next] == -1) {
+                q.push(next);
+                distance[next] = distance[node] + 1;
+                parent[next] = node;
+                if (next == end) {
+                    break;
+                }
+            }
+        }
+    }
+
+    vector<int> path;
+    if (distance[end] == -1) {
+        return path;  // No path found
+    }
+
+    for (int at = end; at != -1; at = parent[at]) {
+        path.push_back(at);
+    }
+
+    reverse(path.begin(), path.end());
+    return path;
+}
+
+int main() {
+    vector<vector<int>> graph = {
+        {1, 2, 3},
+        {4},
+        {4, 5},
+        {2},
+        {},
+        {6},
+        {},
+        {6, 8},
+        {}
+    };
+
+    int start = 0;
+    int end = 4;
+    vector<int> path = shortestPath(graph, start, end);
+
+    if (!path.empty()) {
+        cout << "Shortest path  " << start << " to " << end << " is: ";
+        for (int node : path) {
+            cout << node << " ";
+        }
+        cout << endl;
+    }
+    else {
+        cout << "No path found " << start << " to " << end << endl;
+    }
+
+    return 0;
+}

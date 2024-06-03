@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool dfs(int node, vector<vector<int>>& graph, vector<int>& color) {
+    if (color[node] == 1) {
+        return true;
+    }
+    if (color[node] == 2) {
+        return false;
+    }
+
+    color[node] = 1;
+
+    for (int next : graph[node]) {
+        if (dfs(next, graph, color)) {
+            return true;
+        }
+    }
+
+    color[node] = 2;
+    return false;
+}
+
+bool Cycle(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> color(n, 0);
+
+    for (int node = 0; node < n; ++node) {
+        if (color[node] == 0) {
+            if (dfs(node, graph, color)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    vector<vector<int>> graph = {
+        {1, 2, 3},
+        {4},
+        {4, 5},
+        {2},
+        {},
+        {6},
+        {},
+        {6, 8},
+        {}
+    };
+
+    if (Cycle(graph)) {
+        cout << "The graph does not contain a cycle." << endl;
+    }
+      else {
+        cout << "The graph contains a cycle." << endl;
+    }
+
+    return 0;
+}
